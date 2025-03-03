@@ -90,6 +90,12 @@ out
 # Nuxt.js build / generate output
 .nuxt
 dist
+/dist
+.svelte-kit/*
+.svelte-kit/
+build
+/build
+
 
 # Gatsby files
 .cache/
@@ -130,6 +136,3 @@ dist
 .pnp.*
 
 .DS_Store
-
-.svelte-kit
-/build
