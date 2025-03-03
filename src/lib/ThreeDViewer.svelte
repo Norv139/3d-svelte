@@ -28,7 +28,7 @@
     
     // Reactive states
     let ambientIntensity = 0.5;
-    let ambientColor = '#ffffff';
+    let ambientColor = '#c5c5c5';
     let directionalIntensity = 0.7;
     let directionalColor = '#ffffff';
     let lightX = 50;
@@ -292,30 +292,27 @@
             <div class="error">{errorMessage}</div>
         {/if}
 
-        <div bind:this={container} class="viewer-container"></div>
+        <div bind:this={container} class="viewer-container" ></div>
 
         <div class="control-panel">
-            <div class="light-section">
-                <h3>File import</h3> 
+            <div class="control-section">
+                <h3>File Settings</h3> 
 
-                <div class="slider-container">
+                <div class="loading-container">
                     <input 
                         type="file" 
                         accept=".stl" 
                         on:change={handleFileUpload}
                         class="file-input"
                     >
-                                <!-- Индикатор загрузки -->
-                    {#if loadProgress > 0}
-                        <div class="loader">
-                            <progress value={loadProgress} max="100"></progress>
-                            {loadProgress}%
-                        </div>
-                    {/if}
+                    <div class="loader" style={loadProgress > 0 ?  "display: block;" : "visibility: hidden"} >
+                        <progress value={loadProgress} max="100"></progress>
+                        {loadProgress}%
+                    </div>
                 </div>
 
                 <div class="slider-container">
-                    <div>Color: </div>
+                    <div>Color model: </div>
                     <input type="color" bind:value={modelColor}>
                 </div>
 
@@ -325,48 +322,57 @@
             </div>
 
             <!-- Ambient Light Controls -->
-            <div class="light-section">
-                <h3>Ambient Light</h3>
-                <div class="slider-container">
-                    <div>Intensity: {ambientIntensity}</div>
-                    <input type="range" bind:value={ambientIntensity} min="0" max="1" step="0.1">
-                </div>
-                <div class="slider-container">
-                    <div>Color: </div>
-                    <input type="color" bind:value={ambientColor}>
-                </div>
-            </div>
+            
 
             <!-- Directional Light -->
-            <div class="light-section">
-                <h3>Directional Light</h3>
+            <div class="control-section">
+                <h3>Light Settings</h3>
 
-                <div class="slider-container">
-                    <div>Intensity: {directionalIntensity}</div>
-                    <input type="range" bind:value={directionalIntensity} min="0" max="2" step="0.1">
-                </div>
+                <button on:click={resetLightSettings} class="btn">Reset Lights</button>
 
-                <div class="slider-container">
-                    <div>Color: </div>
-                    <input type="color" bind:value={directionalColor}>
-                </div>
+                <div class="control-part">
+                    <h4>Directional Light</h4>
 
-                <div class="slider-container">
-                    <div>X: {lightX}</div>
-                    <input type="range" bind:value={lightX} min="-200" max="200">
-                    
+                    <div class="slider-container">
+                        <div>X: {lightX}</div>
+                        <input type="range" bind:value={lightX} min="-200" max="200">
+                        
+                    </div>
+                    <div class="slider-container">
+                        <div>Y: {lightY}</div>
+                        <input type="range" bind:value={lightY} min="-200" max="200">
+                        
+                    </div>
+                    <div class="slider-container">
+                        <div>Z: {lightZ}</div>
+                        <input type="range" bind:value={lightZ} min="-200" max="200">
+                        
+                    </div>
                 </div>
-                <div class="slider-container">
-                    <div>Y: {lightY}</div>
-                    <input type="range" bind:value={lightY} min="-200" max="200">
-                    
+                <div class="control-part">
+                    <h4>Ambient Light</h4>
+
+                    <div class="slider-container">
+                        <div>Intensity: {directionalIntensity}</div>
+                        <input type="range" bind:value={directionalIntensity} min="0" max="2" step="0.1">
+                    </div>
+    
+                    <div class="slider-container">
+                        <div>Color: </div>
+                        <input type="color" bind:value={directionalColor}>
+                    </div>
+    
+
+                    <h4>Shadow Light</h4>
+                    <div class="slider-container">
+                        <div>Intensity: {ambientIntensity}</div>
+                        <input type="range" bind:value={ambientIntensity} min="0" max="1" step="0.1">
+                    </div>
+                    <div class="slider-container">
+                        <div>Color: </div>
+                        <input type="color" bind:value={ambientColor}>
+                    </div>
                 </div>
-                <div class="slider-container">
-                    <div>Z: {lightZ}</div>
-                    <input type="range" bind:value={lightZ} min="-200" max="200">
-                    
-                </div>
-                <button on:click={resetLightSettings}>Reset Lights</button>
             </div>
 
             
@@ -377,41 +383,51 @@
 </div>
 
 <style>
-    .container { max-width: 800px;  }
+    .btn {
+        margin: 5px 0;
+    }
+    .container { display: grid }
 
-    .container-model { display: flex; }
+    .container-model { display: flex;     margin: 0 auto; }
 
     .viewer-container { 
         width: 600px; 
         height: 600px;
         border: 1px solid #ccc;
-        margin: 10px 0;
     }
     .control-panel {
-        display: grid;
+        display: block;
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
-        padding: 15px;
+        /* padding: 15px; */
         border: 1px solid #ddd;
         background: #f8f8f8;
     }
-    .light-section {
-        padding: 10px;
+    .control-section {
+        padding: 10px 0 0 10px;
         border: 1px solid #eee;
+    }
+    .control-part {
+        margin: 10px 0;
     }
     .slider-container {
         margin: 8px 0;
         display: grid;
         grid-template-columns: 120px auto;
     }
-    .slider-container label {
-        min-width: 60px;
+    .loading-container {
+        margin: 8px 0;
+        display: block;
+        grid-template-columns: auto auto;
     }
     .slider-container div {
         min-width: 60px;
     }
-
     input[type="range"] {
         width: 180px;
     }
+    control-section h1, h2, h3, h4 {
+        margin-top: 0px;
+    }
+
 </style>
